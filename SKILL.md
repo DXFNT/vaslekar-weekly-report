@@ -18,7 +18,7 @@ Automated weekly report for the Dexfinity-managed client Poliklinika Váš Leká
 | Source | What | How (PRIMARY) |
 |---|---|---|
 | **Meta Marketing API** | Meta Ads raw metrics (W-1 + W-2 account-level) | **Meta MCP** — `ads_get_ad_entities` (level=account) on `1783827691983346` |
-| **Google Ads UI** | Google Ads raw metrics (W-1 + W-2 by campaign) | **Chrome MCP** — navigate to `https://ads.google.com/aw/campaigns?ocid=<…>`, set custom date range via the date picker, extract table via `javascript_tool` (`document.body.innerText` then parse) |
+| **Google Ads Reporting API** | Google Ads raw metrics (W-1 + W-2, account + per-campaign) | **Supermetrics MCP** (`data_query` on `ds_id=AW`, account `2742476958` for Váš Lekár). Already authenticated via `matej.astary@dexfinity.com`. Fields: `Impressions,Clicks,Cost_eur,Ctr,CPC,Conversions,CostPerConversion,ConversionRate`. **Fallback**: Chrome MCP scrape of `ads.google.com` UI if Supermetrics rate-limited. |
 | Basecamp thread | **Optimization context only** (NOT raw numbers): Adrián K. = G Ads narrative + decisions, Peter V. = Meta sales view narrative | `basecamp comments list 9791306636 -p 46381488 --account 5020993` — inserted verbatim into Team Comments section, never as substitute for API/UI data |
 | CRM | Orders + revenue | Excel exports from Miroslav T. (`miroslav.tahotny@vaslekar.sk`) — orders sheet + sold-products sheet. Either auto-fetched from Gmail, or attached manually each Monday. |
 | Vyťaženosť | Monthly ambulance utilization | Email from Miroslav T. (Thursdays), referenced as last known state |
@@ -42,12 +42,17 @@ The skill orchestrates 7 steps. Run them in order:
    - Call `ads_get_ad_entities` (`level: account`) on Váš Lekár account `1783827691983346` for both weeks.
    - Required fields: `amount_spent, impressions, reach, clicks, cpm, cpc, ctr, frequency, actions:link_click, actions:omni_purchase, actions:page_engagement, cost_per_link_click, cost_per_action_type`.
    - Compute WoW deltas for each metric.
-4. **Fetch Google Ads data via Chrome MCP**.
-   - Navigate to the Váš Lekár Google Ads account in Chrome (`tabs_create_mcp` + `navigate`).
-   - Set custom date range to the closed week (Mon→Sun) via the date picker, wait for the campaigns table to load, then extract data with `javascript_tool` (`document.body.innerText` + regex parse, or pull from the `<table>` DOM directly).
-   - Repeat for the previous week.
-   - Compute WoW deltas: spend, clicks, impressions, CTR, CPC, conversions, CPA, conv. rate — both account-level and per-campaign.
-   - **Fallback**: if Chrome MCP can't reach Google Ads (no active session, MCC redirect, captcha), render the G Ads section as a "data gap — Chrome session not authenticated" block. Do NOT substitute Adrián's Basecamp narrative for the raw numbers.
+4. **Fetch Google Ads data via Supermetrics MCP** (PRIMARY).
+   - Tool: `mcp__<supermetrics>__data_query`
+   - `ds_id`: `AW` (Google Ads)
+   - `ds_accounts`: `2742476958` (Váš Lekár, in Dexfinity MCC)
+   - `fields`: `Impressions,Clicks,Cost_eur,Ctr,CPC,Conversions,CostPerConversion,ConversionRate`
+   - `date_range_type`: `custom` with `start_date` + `end_date` for the closed week (Mon→Sun), then same query for the previous week.
+   - Returns `schedule_id` → poll with `get_async_query_results` until status=`completed`.
+   - For per-campaign breakdown, add `Campaign` as a dimension and increase `max_rows`.
+   - Compute WoW deltas: cost, clicks, impressions, CTR, CPC, conversions, CPA, conv. rate — account-level and per-campaign.
+   - **Cross-validate** with Adrián's Basecamp comment (CTR / CPC numbers should match within rounding).
+   - **Fallback if Supermetrics is rate-limited or auth-expired**: Chrome MCP scrape of `ads.google.com` (see `scripts/fetch_google_ads.py`). If both fail, render "data gap" — do NOT substitute Basecamp narrative for raw numbers.
 5. **Fetch optimization commentary from Basecamp**.
    - Basecamp CLI: `basecamp comments list 9791306636 -p 46381488 --account 5020993 --json --limit 50`.
    - Filter to comments created in the past 7 days from Adrián Kerekes (G Ads optimization narrative) and Peter Volaj (Meta sales view narrative).
