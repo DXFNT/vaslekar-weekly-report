@@ -39,8 +39,13 @@ The skill orchestrates 7 steps. Run them in order:
    - Otherwise call Gmail MCP `search_threads` with `from:miroslav.tahotny@vaslekar.sk has:attachment newer_than:3d` and download the most recent xlsx attachments.
    - Parse with `scripts/parse_crm_excel.py` to compute: orders, revenue, AOV, product breakdown, per-specialization breakdown of jednorázové vstupy.
 3. **Fetch Meta Ads data via Meta MCP**.
-   - Call `ads_get_ad_entities` (`level: account`) on Váš Lekár account `1783827691983346` for both weeks.
-   - Required fields: `amount_spent, impressions, reach, clicks, cpm, cpc, ctr, frequency, actions:link_click, actions:omni_purchase, actions:page_engagement, cost_per_link_click, cost_per_action_type`.
+   - **Account-level totals**: `ads_get_ad_entities` (`level: account`) on `1783827691983346` for both weeks. Fields: `amount_spent, impressions, reach, clicks, cpm, cpc, ctr, frequency, actions:link_click, actions:omni_purchase, actions:page_engagement, cost_per_link_click, cost_per_action_type`.
+   - **Campaign-level breakdown for performance vs boosting split**: `ads_get_ad_entities` (`level: campaign`) with filtering `[{field: "campaign.amount_spent", operator: "GREATER_THAN", value: ["0"]}]`, sort `amount_spent_descending`, limit 30. Fields: `name, objective, amount_spent, impressions, actions:omni_purchase`.
+   - **Categorize each campaign by objective**:
+     - `OUTCOME_SALES` → **Performance** bucket (e.g. `dex-sales-*`)
+     - `OUTCOME_ENGAGEMENT`, `OUTCOME_AWARENESS` → **Boosting** bucket (e.g. `5/26 Poliklinika boost - engagement / ThruPlay`)
+     - `LINK_CLICKS` with awareness intent (e.g. `dex-klinicka_studia-traffic`) → **Other** bucket; flag separately, never lump with performance
+   - Compute the split tables: `(performance / boosting / other) × (W21 / W20 / WoW%)`. Surface in report.
    - Compute WoW deltas for each metric.
 4. **Fetch Google Ads data via Supermetrics MCP** (PRIMARY).
    - Tool: `mcp__<supermetrics>__data_query`
@@ -75,6 +80,7 @@ The skill orchestrates 7 steps. Run them in order:
 4. **Meta end-date in URL params is exclusive.** When constructing manual Meta Ads URLs (fallback), add +1 day to the end date.
 5. **Pixel disclaimer.** Until W21 (25.5.2026), the report carried a "40+ days without purchase event" warning. W21 broke this — 2 omni_purchase events fired. Keep tracking-gap language up to date with reality (don't carry stale warnings).
 6. **Keep Dexfinity / Váš Lekár branding intact.** Logos: `https://vaslekar.sk/wp-content/uploads/2022/06/vaslekar_logo_light.svg` (header) and `https://www.dexfinity.com/wp-content/uploads/2021/02/Logo-Small-Light-Landscape.svg` (footer, on navy background).
+7. **Always split Meta spend by objective** — Performance (OUTCOME_SALES) vs Boosting (OUTCOME_ENGAGEMENT / OUTCOME_AWARENESS) vs Other (LINK_CLICKS / traffic / clinical / one-off). Render two PNOs: **Performance PNO** (G Ads + Meta performance / revenue) for sales attribution, and **Total PNO** (all paid spend / revenue) for full nákladová rovnica. AM-ovia chcú vidieť oboje, a klient si zaslúži vedieť, koľko ide do brand-buildingu vs okamžitej predajnej výkonnosti.
 
 ## Environment variables
 
