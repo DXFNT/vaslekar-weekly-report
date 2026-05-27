@@ -71,12 +71,15 @@ The skill auto-resolves the closed week, pulls Gmail attachments, fetches MCP da
 
 ## Data sources
 
-| Source | Cadence | Owner |
-|---|---|---|
-| Meta Marketing API | On demand | Dexfinity (MCP token) |
-| Basecamp "Weekly reports comments" thread (msg `9791306636`) | Mondays | Adrián K. (G Ads), Peter V. (Meta sales) |
-| CRM orders + products xlsx | Mondays | Miroslav Tahotný (`miroslav.tahotny@vaslekar.sk`) |
-| Vyťaženosť ambulancií | Thursdays | Miroslav Tahotný |
+| Source | What | Cadence | Owner |
+|---|---|---|---|
+| **Meta Marketing API** (Cowork Meta MCP) | Meta Ads raw metrics | On demand | Dexfinity (MCP token) |
+| **Google Ads UI** (Chrome MCP) | Google Ads raw metrics | On demand | Adrián K. (must be signed in to G Ads in the connected Chrome) |
+| Basecamp "Weekly reports comments" thread (msg `9791306636`) | Optimization narrative — **NOT raw numbers** | Mondays | Adrián K. (G Ads context), Peter V. (Meta sales context) |
+| CRM orders + products xlsx | Orders, revenue, AOV, product mix | Mondays | Miroslav Tahotný (`miroslav.tahotny@vaslekar.sk`) |
+| Vyťaženosť ambulancií | Per-spec utilization % | Thursdays | Miroslav Tahotný |
+
+**Source-of-truth rule**: raw spend/clicks/impressions/conversions for both ad platforms come from the API / UI scrape. Basecamp commentary is layered on top as narrative and never substitutes for missing numbers — if Chrome can't reach Google Ads (no session), the report renders a "data gap" block, not Adrián's commentary in its place.
 
 ## Hard rules baked into the skill
 
@@ -98,7 +101,8 @@ vaslekar-weekly-report/
 ├── scripts/
 │   ├── run_report.py             # orchestrator
 │   ├── parse_crm_excel.py        # orders.xlsx + products.xlsx → JSON aggregates
-│   ├── fetch_basecamp.py         # basecamp CLI wrapper
+│   ├── fetch_google_ads.py       # Chrome MCP runbook — agent-driven scrape of Google Ads UI
+│   ├── fetch_basecamp.py         # basecamp CLI wrapper — optimization narrative
 │   ├── render_report.py          # JSON + template → HTML
 │   ├── generate_pdf.py           # HTML → PDF
 │   └── deploy_netlify.py         # HTML → Netlify file-digest deploy
