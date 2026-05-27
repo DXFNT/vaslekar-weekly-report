@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Váš Lekár — Týždenný Report</title>
+<style>
+  /* ========== RESET & BASE ========== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #000B62;
+    --teal: #00acad;
+    --teal-light: #00d4d5;
+    --green: #01C899;
+    --blue-accent: #3A69DB;
+    --bg: #f7f8fc;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --green-metric: #059669;
+    --green-bg: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-bg: #fffbeb;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm 12mm;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--gray-900);
+    font-size: 13px;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--white);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  /* ========== HEADER ========== */
+  .report-header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--navy) 100%);
+    color: var(--white);
+    padding: 36px 40px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .report-header::after {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    background: var(--white);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--navy);
+    font-size: 18px;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text span {
+    font-weight: 400;
+    opacity: 0.85;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 12px;
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+
+  .report-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+
+  .report-subtitle {
+    font-size: 14px;
+    opacity: 0.8;
+    font-weight: 400;
+  }
+
+  /* ========== EXECUTIVE SUMMARY BAR ========== */
+  .summary-bar {
+    background: var(--navy);
+    color: var(--white);
+    padding: 20px 40px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  .summary-item {
+    text-align: center;
+  }
+
+  .summary-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    opacity: 0.65;
+    margin-bottom: 4px;
+  }
+
+  .summary-value {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .summary-change {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  .change-up { color: var(--green); }
+  .change-down { color: #ff6b6b; }
+  .change-neutral { opacity: 0.5; }
+
+  /* ========== CONTENT AREA ========== */
+  .content {
+    padding: 32px 40px;
+  }
+
+  /* ========== SECTION ========== */
+  .section {
+    margin-bottom: 32px;
+    page-break-inside: avoid;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gray-200);
+  }
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .icon-ga4 { background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; }
+  .icon-gads { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
+  .icon-meta { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+  .icon-gsc { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+  .icon-crm { background: linear-gradient(135deg, var(--teal), #0e7490); color: white; }
+  .icon-team { background: linear-gradient(135deg, var(--navy), var(--blue-accent)); color: white; }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.2px;
+  }
+
+  .section-period {
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-left: auto;
+  }
+
+  /* ========== METRIC CARDS ========== */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .metrics-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .metric-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .metric-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+  }
+
+  .metric-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.3px;
+  }
+
+  .metric-change {
+    font-size: 11px;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .up { color: var(--green-metric); }
+  .down { color: var(--red); }
+  .neutral { color: var(--gray-500); }
+
+  /* ========== DATA TABLES ========== */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .data-table thead {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .data-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .data-table th:not(:first-child) {
+    text-align: right;
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .data-table td:not(:first-child) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .data-table tbody tr:nth-child(even) {
+    background: var(--gray-50);
+  }
+
+  .data-table tbody tr:hover {
+    background: #eef2ff;
+  }
+
+  .data-table .total-row {
+    background: var(--gray-100) !important;
+    font-weight: 700;
+  }
+
+  /* ========== HIGHLIGHT BOX ========== */
+  .highlight-box {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .highlight-positive {
+    background: var(--green-bg);
+    border-left: 3px solid var(--green-metric);
+    color: #065f46;
+  }
+
+  .highlight-warning {
+    background: var(--orange-bg);
+    border-left: 3px solid var(--orange);
+    color: #92400e;
+  }
+
+  .highlight-negative {
+    background: var(--red-bg);
+    border-left: 3px solid var(--red);
+    color: #991b1b;
+  }
+
+  .highlight-neutral {
+    background: #eff6ff;
+    border-left: 3px solid var(--blue-accent);
+    color: #1e3a5f;
+  }
+
+  /* ========== TEAM COMMENTS ========== */
+  .comment-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .comment-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--navy));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .comment-author {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--navy);
+  }
+
+  .comment-role {
+    font-size: 11px;
+    color: var(--gray-500);
+  }
+
+  .comment-body {
+    font-size: 12.5px;
+    color: var(--gray-700);
+    line-height: 1.65;
+    padding-left: 40px;
+  }
+
+  .comment-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-left: 8px;
+  }
+
+  .tag-action { background: #dbeafe; color: #1e40af; }
+  .tag-insight { background: #ede9fe; color: #5b21b6; }
+  .tag-risk { background: #fee2e2; color: #991b1b; }
+
+  /* ========== FOOTER ========== */
+  .report-footer {
+    background: var(--navy);
+    border-top: none;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .footer-dexfinity {
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  /* ========== PRINT STYLES ========== */
+  @media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: 100%; }
+    .section { page-break-inside: auto; }
+    .section-header { page-break-after: avoid; }
+    .metrics-grid { page-break-inside: avoid; }
+    .data-table { page-break-inside: auto; }
+    .data-table thead { display: table-header-group; }
+    .data-table tr { page-break-inside: avoid; }
+    .highlight-box, .highlight-positive, .highlight-warning, .highlight-negative, .highlight-neutral { page-break-inside: avoid; }
+    .comment-card { page-break-inside: avoid; }
+    .data-table tbody tr:hover { background: inherit; }
+    .summary-bar { page-break-inside: avoid; }
+    .report-header { page-break-after: avoid; }
+  }
+
+  /* ========== HELPER ========== */
+  .text-muted { color: var(--gray-500); }
+  .text-small { font-size: 11px; }
+  .mt-8 { margin-top: 8px; }
+  .mb-4 { margin-bottom: 4px; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+</style>
+</head>
+<body>
+
+<div class="report">
+
+  <!-- ============ HEADER ============ -->
+  <div class="report-header">
+    <div class="header-top">
+      <div class="logo-area">
+        <img src="https://vaslekar.sk/wp-content/uploads/2022/06/vaslekar_logo_light.svg" alt="Váš Lekár" style="height: 40px; width: auto;">
+      </div>
+      <div class="header-meta">
+        Prepared by Dexfinity<br>
+        Account Manager: Jozef Zelenay
+      </div>
+    </div>
+    <div class="report-title">Týždenný Výkonnostný Report</div>
+    <div class="report-subtitle">Obdobie: 18. máj – 24. máj 2026 (W21) · Klient: Váš Lekár</div>
+  </div>
+
+  <!-- ============ EXECUTIVE SUMMARY BAR ============ -->
+  <div class="summary-bar">
+    <div class="summary-item">
+      <div class="summary-label">Revenue (18–24 máj)</div>
+      <div class="summary-value">€6,770</div>
+      <div class="summary-change change-down">▼ -19.0% vs €8,361 W20</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Objednávky</div>
+      <div class="summary-value">54</div>
+      <div class="summary-change change-down">▼ -25.0% vs 72 W20</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Priem. objednávka</div>
+      <div class="summary-value">€125</div>
+      <div class="summary-change change-up">▲ +8.0% vs €116 W20</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Meta Account Spend</div>
+      <div class="summary-value">€412</div>
+      <div class="summary-change change-down">▲ +113.9% vs €193 W20</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">PNO (Meta only / revenue)</div>
+      <div class="summary-value">6.09%</div>
+      <div class="summary-change change-neutral">€412 Meta / €6,770 rev · G Ads spend chýba</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ============ GOOGLE ADS ============ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-gads">G</div>
+        <div class="section-title">Google Ads</div>
+        <div class="section-period">18–24. máj vs. 11–17. máj 2026</div>
+      </div>
+
+      <div class="highlight-positive" style="margin-bottom: 16px;">
+        <strong>PRELOM — purchase konverzia v Google Ads funguje:</strong> Adrián K. (25.5.) potvrdil, že tracking purchase eventu už beží správne a Google Ads zaznamenal <strong>15 attributed objednávok za W21</strong>: RTG 7 (treba skontrolovať, vysoký počet), USG 3, Gynekológia 3, Dermatovenerológia 2. Tým sa odstraňuje 40+ dňový tracking gap, ktorý sme sledovali — algoritmus môže optimalizovať na reálne purchase, nielen na rpp_visits proxy.
+      </div>
+
+      <div class="highlight-neutral" style="margin-bottom: 16px;">
+        <strong>Zdroj W21 dát:</strong> Basecamp komentár Adrián Kerekes z 25. mája 2026 — týždenný Search/PMax sumár (CTR + CPC delty po kampaniach + attributed purchases). Absolútny spend / clicks / impressions Adrián v tomto komentári nešpecifikoval — v reporte uvádzame iba overené metriky.
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">CTR (priemer účtu)</div>
+          <div class="metric-value">14.75%</div>
+          <div class="metric-change up">▲ +10.9% vs 13.30% W20</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">CPC (priemer účtu)</div>
+          <div class="metric-value">€0.22</div>
+          <div class="metric-change down">▲ +1.9% vs €0.22 W20</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Purchase orders (W21)</div>
+          <div class="metric-value">15</div>
+          <div class="metric-change up">▲ nový signál (pred. 0)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Top kampaň</div>
+          <div class="metric-value">Obezito</div>
+          <div class="metric-change up">CTR +95% (9.6% → 18.7%)</div>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Metrika</th>
+            <th>11–17. máj (W20)</th>
+            <th>4–10. máj (W19)</th>
+            <th>WoW (W20)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Spend</td>
+            <td>€305.68</td>
+            <td>€282.60</td>
+            <td><span style="color: var(--orange);">▲ +8.2%</span></td>
+          </tr>
+          <tr>
+            <td>Clicks</td>
+            <td>1,405</td>
+            <td>1,227</td>
+            <td><span style="color: var(--green-metric);">▲ +14.5%</span></td>
+          </tr>
+          <tr>
+            <td>Impressions</td>
+            <td>10,561</td>
+            <td>12,751</td>
+            <td><span style="color: var(--red);">▼ -17.2%</span></td>
+          </tr>
+          <tr>
+            <td>CTR</td>
+            <td>13.30%</td>
+            <td>9.62%</td>
+            <td><span style="color: var(--green-metric);">▲ +3.68 pp (+38%)</span></td>
+          </tr>
+          <tr>
+            <td>Avg. CPC</td>
+            <td>€0.22</td>
+            <td>€0.23</td>
+            <td><span style="color: var(--green-metric);">▼ -4.3%</span></td>
+          </tr>
+          <tr>
+            <td>CPM</td>
+            <td>€28.94</td>
+            <td>€22.16</td>
+            <td><span style="color: var(--orange);">▲ +30.6%</span></td>
+          </tr>
+          <tr>
+            <td>Conversions (Platform Comparable)</td>
+            <td>427.31</td>
+            <td>367.47</td>
+            <td><span style="color: var(--green-metric);">▲ +16.3%</span></td>
+          </tr>
+          <tr>
+            <td>Conv. rate</td>
+            <td>30.41%</td>
+            <td>29.95%</td>
+            <td><span style="color: var(--green-metric);">▲ +0.46 pp</span></td>
+          </tr>
+          <tr>
+            <td>CPA (Cost / conv.)</td>
+            <td>€0.72</td>
+            <td>€0.77</td>
+            <td><span style="color: var(--green-metric);">▼ -6.5%</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin: 20px 0 10px; font-size: 14px; color: var(--navy);">W21 — kampane s najväčším CTR & CPC pohybom (Adrián K., 25.5.)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kampaň</th>
+            <th>CTR Δ</th>
+            <th>CPC Δ</th>
+            <th>Pozn.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Obezitológia</strong></td>
+            <td><span style="color: var(--green-metric); font-weight: 700;">+95% (9.6% → 18.7%)</span></td>
+            <td><span style="color: var(--orange);">+37%</span></td>
+            <td>CPC rast kvôli zníženému rozpočtu a novým vyhľadávacím výrazom</td>
+          </tr>
+          <tr>
+            <td><strong>Psychológia</strong></td>
+            <td><span style="color: var(--green-metric); font-weight: 700;">+40%</span></td>
+            <td>—</td>
+            <td>Pokračujúca optimalizácia po W20</td>
+          </tr>
+          <tr>
+            <td><strong>Kardiológia</strong></td>
+            <td><span style="color: var(--green-metric); font-weight: 700;">+38% (→ 20.9%)</span></td>
+            <td>—</td>
+            <td>Najvyšší absolútny CTR na účte (20.9%)</td>
+          </tr>
+          <tr>
+            <td>Urológia</td>
+            <td>—</td>
+            <td><span style="color: var(--orange);">+28%</span></td>
+            <td>CPC rast kvôli zníženému rozpočtu a novým vyhľadávacím výrazom</td>
+          </tr>
+          <tr>
+            <td>Neurológia</td>
+            <td>—</td>
+            <td><span style="color: var(--green-metric);">-12%</span></td>
+            <td>CPC zlacnenie</td>
+          </tr>
+          <tr>
+            <td>Rádiologické pracovisko (USG)</td>
+            <td>—</td>
+            <td><span style="color: var(--green-metric);">-15%</span></td>
+            <td>Negative keyword list a city filter fungujú</td>
+          </tr>
+          <tr>
+            <td>Plastická chirurgia</td>
+            <td><span style="color: var(--red); font-weight: 700;">-45%</span></td>
+            <td><span style="color: var(--green-metric);">-16%</span></td>
+            <td>Pokles po W20 peaku (CTR 25% → ~13.8%)</td>
+          </tr>
+          <tr>
+            <td>Chirurgia</td>
+            <td><span style="color: var(--red); font-weight: 700;">-46%</span></td>
+            <td>—</td>
+            <td>Treba revíziu textov / search term filtering</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin: 20px 0 10px; font-size: 14px; color: var(--navy);">W21 — attributed purchase orders cez Google Ads (Adrián K., 25.5.)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kampaň</th>
+            <th>Objednávky (W21)</th>
+            <th>Pozn.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>RTG</strong></td>
+            <td><strong style="color: var(--green-metric);">7</strong></td>
+            <td style="color: var(--orange); font-style: italic;">Vysoký počet — Adrián K. flagol "treba to skontrolovať"</td>
+          </tr>
+          <tr>
+            <td>Gynekológia</td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Rádiologické pracovisko (USG)</td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Dermatovenerológia</td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr style="font-weight: 700; border-top: 2px solid var(--navy);">
+            <td>SPOLU attributed (G Ads W21)</td>
+            <td>15</td>
+            <td>~28% z 54 CRM objednávok W21</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin: 20px 0 10px; font-size: 14px; color: var(--navy);">W20 referenčné kampane (11–17. máj)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kampaň</th>
+            <th>Spend</th>
+            <th>Clicks</th>
+            <th>Impr.</th>
+            <th>CTR</th>
+            <th>Conv.</th>
+            <th>CPA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SRCH — Neurológia</strong></td>
+            <td>€27.86</td>
+            <td>102</td>
+            <td>781</td>
+            <td>13.06%</td>
+            <td>37.85</td>
+            <td>€0.74</td>
+          </tr>
+          <tr>
+            <td><strong>PMax — All ambulance</strong></td>
+            <td>€21.66</td>
+            <td>260</td>
+            <td>1,523</td>
+            <td>17.07%</td>
+            <td>146.43</td>
+            <td>€0.15</td>
+          </tr>
+          <tr>
+            <td>SRCH — ORL</td>
+            <td>€20.50</td>
+            <td>139</td>
+            <td>710</td>
+            <td>19.58%</td>
+            <td>45.78</td>
+            <td>€0.45</td>
+          </tr>
+          <tr>
+            <td>SRCH — Gastroenterológia</td>
+            <td>€19.64</td>
+            <td>90</td>
+            <td>837</td>
+            <td>10.75%</td>
+            <td>21.93</td>
+            <td>€0.90</td>
+          </tr>
+          <tr>
+            <td>SRCH — Imunoalergológia</td>
+            <td colspan="6" style="font-style: italic; color: var(--gray-500);">Detail v Ads Manager (Limited by budget)</td>
+          </tr>
+          <tr>
+            <td>SRCH — Rádiologické pracovisko (USG)</td>
+            <td colspan="6" style="font-style: italic; color: var(--gray-500);">CTR boost 12.77% → 24.44% (Adrián K., 18.5.)</td>
+          </tr>
+          <tr>
+            <td>SRCH — Angiológia</td>
+            <td>€4.00/d budget</td>
+            <td colspan="5" style="font-style: italic; color: var(--gray-500);">Eligible · CTR 28.08% → 17.03% (-39%) po W19 peak</td>
+          </tr>
+          <tr style="font-weight: 700; background: var(--gray-100);">
+            <td>SPOLU (70 kampaní)</td>
+            <td>€305.68</td>
+            <td>1,405</td>
+            <td>10,561</td>
+            <td>13.30%</td>
+            <td>427.31</td>
+            <td>€0.72</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin: 20px 0 10px; font-size: 14px; color: var(--navy);">WoW Search kampane — CTR boost (Adrián K., 18. máj)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ambulancia</th>
+            <th>CTR W20</th>
+            <th>CTR W19</th>
+            <th>Δ CTR</th>
+            <th>Δ Konverzie / CPC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plastická chirurgia</td>
+            <td>25.00%</td>
+            <td>11.49%</td>
+            <td><span style="color: var(--green-metric);">+13.51 pp (+117%)</span></td>
+            <td><span style="color: var(--green-metric);">Negatívne kľúčové slová zaberajú</span></td>
+          </tr>
+          <tr>
+            <td>Rádiologické pracovisko (USG)</td>
+            <td>24.44%</td>
+            <td>12.77%</td>
+            <td><span style="color: var(--green-metric);">+11.67 pp (+91%)</span></td>
+            <td><span style="color: var(--green-metric);">CPC €0.62 → €0.30 (-52%)</span></td>
+          </tr>
+          <tr>
+            <td>Chirurgia</td>
+            <td>18.18%</td>
+            <td>11.05%</td>
+            <td><span style="color: var(--green-metric);">+7.13 pp (+65%)</span></td>
+            <td><span style="color: var(--green-metric);">Konv. 8.5 → 13.4 (+57%)</span></td>
+          </tr>
+          <tr>
+            <td>Dermatovenerológia</td>
+            <td>—</td>
+            <td>18.13%</td>
+            <td>—</td>
+            <td><span style="color: var(--green-metric);">Konv. 10.0 → 19.0 (+90%)</span></td>
+          </tr>
+          <tr>
+            <td>Neurológia</td>
+            <td>13.06%</td>
+            <td>13.83%</td>
+            <td><span style="color: var(--gray-500);">≈ stabilné</span></td>
+            <td><span style="color: var(--green-metric);">Konv. 20.9 → 37.9 (+81%)</span></td>
+          </tr>
+          <tr>
+            <td>Urológia</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span style="color: var(--green-metric);">Kliky +56%, konv. 9.97 → 17.98 (+80%)</span></td>
+          </tr>
+          <tr>
+            <td>RTG</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span style="color: var(--green-metric);">Kliky +97%, konv. 12.5 → 21.0 (+68%)</span></td>
+          </tr>
+          <tr>
+            <td>Angiológia (nová)</td>
+            <td>17.03%</td>
+            <td>28.08%</td>
+            <td><span style="color: var(--red);">-11.05 pp (-39%)</span></td>
+            <td><span style="color: var(--red);">Po W19 peak — sledujeme</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-positive" style="margin-top: 12px;">
+        <strong>Highlight W21 — CTR rastie (+10.9%) a tracking funguje:</strong> Celkový priemerný CTR na účte stúpol z 13.30% na 14.75% — pokračovanie systematickej optimalizácie negatívnych kľúčových slov, ktorú Adrián K. robí už mesiac. <strong>Obezitológia +95% CTR</strong> (9.6% → 18.7%, najvyšší relatívny zisk týždňa), <strong>Kardiológia +38% na CTR 20.9%</strong> (najvyšší absolútny CTR účtu), <strong>Psychológia +40%</strong>. Purchase konverzia funguje, G Ads zaznamenal 15 attributed objednávok (RTG 7, Gyn 3, USG 3, Dermato 2).
+      </div>
+      <div class="highlight-warning">
+        <strong>Pokles CTR pri Chirurgii (-46%) a Plastickej chirurgii (-45%):</strong> Po W20 peakoch (+65% / +117%) prišla korekcia. Plast. chir. CPC zlacnelo -16% (good), ale Chirurgia bez zmeny CPC + výrazný pokles CTR signalizuje slabšiu relevanciu — treba revíziu textov, search term filtering, a možno návrat negatívnych KW listu na pôvodný stav z W20.
+      </div>
+      <div class="highlight-warning">
+        <strong>CPC rast pri Obezitológii (+37%) a Urológii (+28%):</strong> Adrián K. flagol, že rast CPC je výsledkom zníženého rozpočtu (menší ad rank vs. konkurencia) a nových vyhľadávacích výrazov (slabšie kvalitné skóre). Pre Obezitológiu CTR aj tak vyskočilo +95%, takže efektívna cena per click ostáva v poriadku. Pri Urológii treba sledovať či CPC rast nepoddiera ROAS.
+      </div>
+      <div class="highlight-neutral">
+        <strong>RTG attributed 7 objednávok — Adrián K. flagol "treba skontrolovať":</strong> RTG je referenčný typ vyšetrenia, počet 7 za týždeň cez G Ads je neobvykle vysoký vzhľadom na ostatné kampane. Možné príčiny: (a) duplicate attribution, (b) konverzia naviazaná na pageview formulára namiesto purchase, (c) reálny dopyt. Treba match s CRM (objednávky obsahujú RTG?) a Events Manager validáciu.
+      </div>
+    </div>
+
+    <!-- ============ META ADS ============ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-meta">f</div>
+        <div class="section-title">Meta Ads</div>
+        <div class="section-period">18–24. máj vs. 11–17. máj 2026</div>
+      </div>
+
+      <div class="highlight-neutral" style="margin-bottom: 16px;">
+        <strong>Zdroj W21 dát:</strong> Priame Meta Marketing API volanie cez Meta Ads MCP (account 1783827691983346) — overené 25. mája 2026, account-level totals. Doplnené komentárom Peter Volaj z 25.5. v Basecamp threade (sales view bez boost postov + klinické testovanie).
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Spend (Account total)</div>
+          <div class="metric-value">€412.40</div>
+          <div class="metric-change down">▲ +113.9% vs €192.84 W20</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Reach (unikátni)</div>
+          <div class="metric-value">99,840</div>
+          <div class="metric-change up">▲ +80.3% vs 55,389 W20</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Link clicks</div>
+          <div class="metric-value">2,003</div>
+          <div class="metric-change up">▲ +93.5% vs 1,035 W20</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">CPM</div>
+          <div class="metric-value">€2.03</div>
+          <div class="metric-change up">▼ -1.5% vs €2.06 W20</div>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Metrika</th>
+            <th>18–24. máj (W21)</th>
+            <th>11–17. máj (W20)</th>
+            <th>WoW</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: var(--gray-100); font-weight: 600;">
+            <td colspan="4">Account Overview (zdroj: Meta Marketing API cez MCP)</td>
+          </tr>
+          <tr>
+            <td>Amount spent (celý účet)</td>
+            <td><strong>€412.40</strong></td>
+            <td>€192.84</td>
+            <td><span style="color: var(--orange);">▲ +113.9%</span></td>
+          </tr>
+          <tr>
+            <td>Impressions</td>
+            <td>203,267</td>
+            <td>93,603</td>
+            <td><span style="color: var(--green-metric);">▲ +117.2%</span></td>
+          </tr>
+          <tr>
+            <td>Reach (unikátni)</td>
+            <td>99,840</td>
+            <td>55,389</td>
+            <td><span style="color: var(--green-metric);">▲ +80.3%</span></td>
+          </tr>
+          <tr>
+            <td>Frequency</td>
+            <td>2.04</td>
+            <td>1.69</td>
+            <td><span style="color: var(--orange);">▲ +20.7%</span></td>
+          </tr>
+          <tr>
+            <td>Clicks (all)</td>
+            <td>5,251</td>
+            <td>4,019</td>
+            <td><span style="color: var(--green-metric);">▲ +30.7%</span></td>
+          </tr>
+          <tr>
+            <td>CTR (all clicks)</td>
+            <td>2.58%</td>
+            <td>4.29%</td>
+            <td><span style="color: var(--red);">▼ -1.71 pp (-39.9%)</span></td>
+          </tr>
+          <tr>
+            <td>Link clicks</td>
+            <td>2,003</td>
+            <td>1,035</td>
+            <td><span style="color: var(--green-metric);">▲ +93.5%</span></td>
+          </tr>
+          <tr>
+            <td>Cost per link click</td>
+            <td>€0.21</td>
+            <td>€0.19</td>
+            <td><span style="color: var(--orange);">▲ +10.5%</span></td>
+          </tr>
+          <tr>
+            <td>Page engagement</td>
+            <td>21,293</td>
+            <td>11,910</td>
+            <td><span style="color: var(--green-metric);">▲ +78.8%</span></td>
+          </tr>
+          <tr>
+            <td>CPM</td>
+            <td>€2.03</td>
+            <td>€2.06</td>
+            <td><span style="color: var(--green-metric);">▼ -1.5%</span></td>
+          </tr>
+          <tr>
+            <td>CPC (all clicks)</td>
+            <td>€0.08</td>
+            <td>€0.05</td>
+            <td><span style="color: var(--orange);">▲ +60.0%</span></td>
+          </tr>
+          <tr style="border-top: 2px solid var(--navy);">
+            <td><strong>Omni purchases (attributed)</strong></td>
+            <td><strong style="color: var(--green-metric);">2</strong></td>
+            <td>0 (n/a)</td>
+            <td><span style="color: var(--green-metric); font-weight: 700;">PRELOM — prvé purchase eventy po 40+ dňoch</span></td>
+          </tr>
+          <tr>
+            <td>Cost per purchase</td>
+            <td>€206.20</td>
+            <td>—</td>
+            <td><span style="color: var(--gray-500);">Pri 2 purchases vysoká variancia, sledujeme W22</span></td>
+          </tr>
+          <tr style="background: var(--gray-100); font-weight: 600;">
+            <td colspan="4">Peter V. komentár — sales view (bez boost postov, vrátane klinického testu €47.74)</td>
+          </tr>
+          <tr>
+            <td>Spend sales view 7d (Peter V.)</td>
+            <td>€298.90</td>
+            <td>€109.64</td>
+            <td><span style="color: var(--orange);">▲ +172.7%</span></td>
+          </tr>
+          <tr>
+            <td>Reach sales view (Peter V.)</td>
+            <td>59,959</td>
+            <td>20,681</td>
+            <td><span style="color: var(--green-metric);">▲ +189.9%</span></td>
+          </tr>
+          <tr>
+            <td>Landing Page Views (Peter V.)</td>
+            <td>770</td>
+            <td>210</td>
+            <td><span style="color: var(--green-metric);">▲ +266.7%</span></td>
+          </tr>
+          <tr style="font-size: 11px; font-style: italic; color: var(--gray-500);">
+            <td colspan="4">Rozdiel ≈€113 medzi Account total (€412) a Peter sales view (€299) = boost posty + awareness kampane, ktoré Peter neeviduje v sales view.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin: 20px 0 10px; font-size: 14px; color: var(--navy);">Ad sety s CTR (link click) &gt; 1% — W21 (Peter V., 25. máj)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ambulancia / Segment</th>
+            <th>Pozn.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Obezitológia</strong></td>
+            <td>Link click CTR &gt; 1% (broad publikum)</td>
+          </tr>
+          <tr>
+            <td><strong>Endokrinológia</strong></td>
+            <td>Link click CTR &gt; 1% (broad publikum)</td>
+          </tr>
+          <tr>
+            <td><strong>Neurológia</strong></td>
+            <td>Link click CTR &gt; 1% (broad publikum)</td>
+          </tr>
+          <tr style="color: var(--gray-500);">
+            <td>Ostatné ambulancie</td>
+            <td>Celkový CTR (akýkoľvek klik) &gt; 1%, ale link click (klik na web) ostáva pod 1%</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size: 11px; color: var(--gray-500); margin-top: 6px; font-style: italic;">
+        Pozn. Peter V.: "celkové CTR sú len kliky na reklamu ako takú", link click CTR je relevantnejšia metrika preklikovosti na web.
+      </div>
+
+      <div class="highlight-positive" style="margin-top: 12px;">
+        <strong>PRELOM W21 — Pixel purchase event naskakuje (2 omni_purchase za 7d):</strong> Po 40+ dňoch slepých sales kampaní sa odpálili prvé 2 purchase eventy (psychológia a angiológia) — potvrdené aj v Marketing API (action_type: omni_purchase). Cost per purchase €206 je pri 2 konverziách vysoký, ale ukazuje že signal infrastructure funguje. Príčinou je pravdepodobne kombinácia (a) reverzia/zvýšenie budgetov (Account spend +114% WoW), (b) širší reach 99,840 (+80%), (c) progresívna optimalizácia za posledné týždne. Treba match s CRM v Events Manageri.
+      </div>
+      <div class="highlight-positive">
+        <strong>CPM stabilné na €2.03 (-1.5% WoW) napriek 2× vyššiemu spendu</strong> — algoritmus efektívne distribuuje impresie aj pri škálovaní. Reach +80% a impressions +117% — frequency narástla na 2.04× (z 1.69×), čo je stále zdravé pre awareness/consideration funnel.
+      </div>
+      <div class="highlight-warning">
+        <strong>CTR pokles (4.29% → 2.58%, -40%) a CPC rast (€0.05 → €0.08, +60%):</strong> Pri škálovaní spendu vstupujeme do širších/menej kvalifikovaných publík — overall CTR klesá. Link click CTR (≈0.99% W21 vs ≈1.11% W20) je menej dramatický pokles (-11%), takže relevantná intent metrika ostáva. Treba sledovať, či ďalším škálovaním nezotrváva CPC nad €0.10.
+      </div>
+      <div class="highlight-warning">
+        <strong>Vypnutie traffic kampane na klinické testovanie (Peter V., 25.5.):</strong> €47.74 z testovania už v W22 nebude. Porovnanie W22 vs W21 sales view treba upravovať na ≈€251 čistého spendu. Pre Account total sa zníži o tých istých €47.74.
+      </div>
+      <div class="highlight-warning">
+        <strong>Peter V. preveruje pokles dosahu pri RPP / Ročné členstvo / Gynekológia / Všeobecné lekárstvo / Jednorázové vstupy:</strong> "Pokles dosahu — budeme informovať a zvolíme správne riešenie na nápravu dosahov a tým záujmu o dané balíčky a služby v poliklinike." Celkový reach rastie ale niektoré kategórie ad setov si distribuujú impresie horšie.
+      </div>
+    </div>
+
+    <!-- ============ OBJEDNÁVKY & REVENUE ============ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-crm">👥</div>
+        <div class="section-title">Objednávky & Revenue</div>
+        <div class="section-period">18–24. máj 2026 (W21) · Zdroj: Excel reporty od klienta (Miroslav T., 25.5.)</div>
+      </div>
+
+      <!-- KPI cards -->
+      <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px;">
+        <div style="background: var(--red-bg); border-radius: 10px; padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--gray-500); margin-bottom: 4px;">Revenue (net)</div>
+          <div style="font-size: 22px; font-weight: 700; color: var(--red);">€6,770</div>
+          <div style="font-size: 11px; color: var(--red);">▼ -19.0% vs €8,361 W20</div>
+        </div>
+        <div style="background: var(--red-bg); border-radius: 10px; padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--gray-500); margin-bottom: 4px;">Objednávky</div>
+          <div style="font-size: 22px; font-weight: 700; color: var(--red);">54</div>
+          <div style="font-size: 11px; color: var(--red);">▼ -25.0% vs 72 W20</div>
+        </div>
+        <div style="background: var(--green-bg); border-radius: 10px; padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--gray-500); margin-bottom: 4px;">Priem. objednávka</div>
+          <div style="font-size: 22px; font-weight: 700; color: var(--green-metric);">€125</div>
+          <div style="font-size: 11px; color: var(--green-metric);">▲ +8.0% vs €116 W20</div>
+        </div>
+        <div style="background: var(--orange-bg); border-radius: 10px; padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--gray-500); margin-bottom: 4px;">PNO (Meta only / revenue)</div>
+          <div style="font-size: 22px; font-weight: 700; color: var(--orange);">6.09%</div>
+          <div style="font-size: 11px; color: var(--gray-500);">€412.40 Meta / €6,770 rev · G Ads spend chýba</div>
+        </div>
+      </div>
+
+      <!-- Product breakdown -->
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Produkt</th>
+            <th>Počet</th>
+            <th>Revenue (brutto)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1x jednorazový vstup (všetky špecializácie)</td>
+            <td>29</td>
+            <td style="font-weight: 600;">€1,711</td>
+          </tr>
+          <tr>
+            <td>Rozšírená preventívna prehliadka MAX (€629)</td>
+            <td>2</td>
+            <td>€1,258</td>
+          </tr>
+          <tr>
+            <td>2x jednorazový vstup (všetky špecializácie)</td>
+            <td>11</td>
+            <td>€1,199</td>
+          </tr>
+          <tr>
+            <td>Ročné členstvo PREMIUM (€599)</td>
+            <td>2</td>
+            <td>€1,198</td>
+          </tr>
+          <tr>
+            <td>Všeobecné lekárstvo (€99)</td>
+            <td>5</td>
+            <td>€495</td>
+          </tr>
+          <tr>
+            <td>Rozšírená preventívna prehliadka SMART (€449)</td>
+            <td>1</td>
+            <td>€449</td>
+          </tr>
+          <tr>
+            <td>3x jednorazový vstup (€159)</td>
+            <td>2</td>
+            <td>€318</td>
+          </tr>
+          <tr>
+            <td>Gynekológia — Ročná karta (€119)</td>
+            <td>1</td>
+            <td>€119</td>
+          </tr>
+          <tr>
+            <td>30-min. nutričná konzultácia (€29)</td>
+            <td>1</td>
+            <td>€29</td>
+          </tr>
+          <tr style="color: var(--red);">
+            <td>Promo kódy (zľavy)</td>
+            <td>—</td>
+            <td>-€6</td>
+          </tr>
+          <tr style="font-weight: 700; border-top: 2px solid var(--navy);">
+            <td>CELKOM (netto)</td>
+            <td>54</td>
+            <td>€6,770</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin: 20px 0 10px; font-size: 14px; color: var(--navy);">Jednorazové vstupy podľa špecializácie (W21 vs W20)</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Špecializácia</th>
+            <th>Vstupy W21</th>
+            <th>Vstupy W20</th>
+            <th>Δ WoW</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ORL</td><td>11</td><td>10</td><td><span style="color: var(--green-metric);">+1 (+10%)</span></td></tr>
+          <tr><td>Angiológia</td><td>7</td><td>4</td><td><span style="color: var(--green-metric); font-weight: 700;">+3 (+75%)</span></td></tr>
+          <tr><td>Endokrinológia</td><td>6</td><td>3</td><td><span style="color: var(--green-metric); font-weight: 700;">+3 (+100%)</span></td></tr>
+          <tr><td>Gastroenterológia</td><td>4</td><td>2</td><td><span style="color: var(--green-metric);">+2 (+100%)</span></td></tr>
+          <tr><td>Urológia</td><td>4</td><td>7</td><td><span style="color: var(--red);">-3 (-43%)</span></td></tr>
+          <tr><td>Diabetológia</td><td>4</td><td>3</td><td><span style="color: var(--green-metric);">+1 (+33%)</span></td></tr>
+          <tr><td>Imunoalergológia</td><td>3</td><td>6</td><td><span style="color: var(--red);">-3 (-50%)</span></td></tr>
+          <tr><td>Neurológia</td><td>2</td><td>13</td><td><span style="color: var(--red); font-weight: 700;">-11 (-85%)</span></td></tr>
+          <tr><td>Vnútorné lekárstvo</td><td>1</td><td>1</td><td><span style="color: var(--gray-500);">0</span></td></tr>
+          <tr><td>Kardiológia</td><td>0</td><td>2</td><td><span style="color: var(--red);">-2</span></td></tr>
+          <tr><td>Ortopédia</td><td>0</td><td>3</td><td><span style="color: var(--red);">-3</span></td></tr>
+          <tr style="font-weight: 700; border-top: 1px solid var(--navy);"><td>SPOLU</td><td>42</td><td>54</td><td><span style="color: var(--red);">-12 (-22%)</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-warning" style="margin-top: 12px;">
+        <strong>Slabší týždeň po rekordnom W20 (-25% objednávok, -19% revenue):</strong> 54 objednávok (vs 72 W20) a €6,770 revenue (vs €8,361 W20). Pokles je signifikantný ale očakávateľný — po peakovom W20 (najsilnejší týždeň od januára) prichádza prirodzená korekcia. <strong>Najvýraznejší pokles: Neurológia -11 vstupov</strong> (13 → 2, -85%), čo zhoršuje konzistentnosť — Neuro mala v G Ads (W20) top spend €27.86 a +81% konverzií, takže aktuálny pokles dopytu signalizuje, že konverzia po kliku ostáva problematická.
+      </div>
+      <div class="highlight-positive">
+        <strong>Pozitíva W21:</strong> <strong>AOV vzrástla na €125 (+8%)</strong> — vyšší podiel high-ticket produktov: 2× Rozšírená prehliadka MAX (€1,258), 2× Ročné členstvo PREMIUM (€1,198), 1× Rozšírená prehliadka SMART (€449). Vyšší ticket kompenzuje nižší objem objednávok. <strong>Angiológia +3 vstupy (+75%)</strong> a <strong>Endokrinológia +3 vstupy (+100%)</strong> — tieto špecializácie zhodne s Peterovým komentárom o broad publikách s CTR &gt; 1% (obezito, endo, neuro). <strong>Gastroenterológia +2 (+100%)</strong>.
+      </div>
+      <div class="highlight-neutral">
+        <strong>Korelácia Meta scale-up + W21 dopyt:</strong> Meta spend +173% a reach +190% sa zatiaľ neprejavilo v náraste objednávok (objednávky -25%). Dôvody môžu byť: (a) attribučný lag — Meta touchpoint sa premietne v ďalších 1-2 týždňoch, (b) cieľové publiká nie sú dostatočne zarovnané so service mixom (napr. broad psycho/angio publikum si neobjedná ihneď), (c) traffic kampaň na klinické testovanie absorbovala časť reach-u bez direct purchase intentu. Sledujeme W22 — ak korelácia nenastane, treba refresh creative + LP.
+      </div>
+    </div>
+
+    <!-- ============ VYŤAŽENOSŤ AMBULANCIÍ ============ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">📋</div>
+        <div class="section-title">Vyťaženosť Ambulancií</div>
+        <div class="section-period">aktuálne — posledná aktualizácia 7.5.2026 (Miroslav T.)</div>
+      </div>
+
+      <div class="highlight-neutral" style="margin-bottom: 12px;">
+        <strong>Zdroj:</strong> Email Miroslav T. z 21. mája 2026 — "stvrtkovy report vytazenosti ambulancii" (s vyznačenými dovolenkami lekárov). Tabuľka nižšie je posledná overená vyťaženosť z apríla — od Miroslava T. zatiaľ neprišiel novší export. Akcia v Next Steps: vyžiadať aktuálny export, ktorý reflektuje W20+W21 dopyt (najmä Neurológia -85% jednorazových vstupov za 2 týždne).
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Špecializácia</th>
+            <th>Vyťaženosť (apr 2026)</th>
+            <th>Lekári</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Imunoalergológia</td><td>79%</td><td>2</td><td><span style="color: var(--green-metric); font-weight: 600;">Vysoká</span></td></tr>
+          <tr><td>FBLR</td><td>79%</td><td>1</td><td><span style="color: var(--green-metric); font-weight: 600;">Vysoká</span></td></tr>
+          <tr><td>Kardiológia</td><td>76%</td><td>2</td><td><span style="color: var(--green-metric); font-weight: 600;">Vysoká</span></td></tr>
+          <tr><td>Ortopédia</td><td>73%</td><td>1</td><td><span style="color: var(--green-metric); font-weight: 600;">Vysoká</span></td></tr>
+          <tr><td>Gastroenterológia</td><td>66%</td><td>3</td><td><span style="color: var(--orange); font-weight: 600;">Stredná</span></td></tr>
+          <tr><td>Dermatovenerológia</td><td>61%</td><td>2</td><td><span style="color: var(--orange); font-weight: 600;">Stredná</span></td></tr>
+          <tr><td>Urológia</td><td>61%</td><td>3</td><td><span style="color: var(--orange); font-weight: 600;">Stredná</span></td></tr>
+          <tr><td>Chirurgia</td><td>44%</td><td>1</td><td><span style="color: var(--red); font-weight: 600;">Nízka</span></td></tr>
+          <tr><td>Neurológia</td><td>27%</td><td>1</td><td><span style="color: var(--red); font-weight: 600;">Nízka</span></td></tr>
+          <tr><td>ORL</td><td>13%</td><td>1</td><td><span style="color: var(--red); font-weight: 600;">Nízka</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-neutral">
+        <strong>Match s W20+W21 dopytom:</strong> <strong>ORL (13% apr)</strong> — za 2 týždne pribudlo 21 jednorazových vstupov (W20 10 + W21 11), vyťaženosť by mala skočiť cez 35-40%. Najsilnejší rastový dopyt. <strong>Imunoalergológia (79% apr)</strong> — 9 vstupov za 2 týždne (W20 6 + W21 3), pokles v W21 môže znamenať, že sme na strope a nie sú voľné termíny. <strong>Neurológia (27% apr)</strong> mala W20 13 vstupov ale W21 už len 2 (-85%) — silný indikátor problému s dostupnosťou termínov alebo zníženého angažmá kampaní. Treba overiť s recepciou. <strong>Angiológia +7 (W21)</strong> — nová ambulancia má stabilný dopyt, treba zabezpečiť aj odpovedaciu kapacitu.
+      </div>
+    </div>
+
+    <!-- ============ TEAM COMMENTS ============ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-team">💬</div>
+        <div class="section-title">Komentáre Tímu</div>
+        <div class="section-period">Basecamp thread — Weekly reports comments</div>
+      </div>
+
+      <div class="comment-card">
+        <div class="comment-header">
+          <div class="comment-avatar" style="background: linear-gradient(135deg, var(--teal), var(--green));">PV</div>
+          <div>
+            <div class="comment-author">Peter Volaj</div>
+            <div class="comment-role">PPC specialist · 25. máj 2026 — Meta 7d (W21 sales kampane)</div>
+          </div>
+        </div>
+        <div class="comment-body">
+          <strong>Výsledky 7d:</strong><br>
+          - <strong style="color: var(--green-metric);">purchase event aktívny — 2 za 7d (psychológia, angiológia)</strong><br>
+          - traffic kampaň na klinickú štúdiu sme vypli, nakoľko už bolo dosť záujemcov, opätovne spustíme na žiadosť keď bude ďalšie testovanie<br>
+          - CTR (link click) &gt; 1% v ad setoch na ambulancie: <em>obezito, endo, neuro</em><br>
+          - ostatné ambulancie majú celkové CTR aj vyššie ako 1%, ale link click sleduje preklikovosť ďalej na web a celkové CTR sú len kliky na reklamu ako takú<br>
+          - spend 7d — <strong>€298.90</strong> (vrátane klinického testovania €47.74)<br>
+          - reach 7d — <strong>59,959</strong><br>
+          - zobrazenia (impresie) — <strong>146,964</strong><br>
+          - landing page views — <strong>770</strong><br>
+          - CPM — <strong>€2.03</strong><br><br>
+          <strong>Preverujem s kolegom na kampaniach RPP, ročné členstvo, gynekológia, všeobecné lekárstvo, jednorázové vstupy pokles dosahu</strong> — budeme informovať a zvolíme správne riešenie na nápravu dosahov a tým záujmu o dané balíčky a služby v poliklinike.
+        </div>
+      </div>
+
+      <div class="comment-card">
+        <div class="comment-header">
+          <div class="comment-avatar" style="background: linear-gradient(135deg, #3A69DB, #000B62);">AK</div>
+          <div>
+            <div class="comment-author">Adrián Kerekes</div>
+            <div class="comment-role">PPC specialist / PM · 25. máj 2026 — Google Ads W21 sumár</div>
+          </div>
+        </div>
+        <div class="comment-body">
+          <strong>CTR — pozitívny trend.</strong> Celkový priemerný CTR stúpol z 13.30% na 14.75% (<strong style="color: var(--green-metric);">+10.9%</strong>). Najväčšie zisky zaznamenali <strong>Obezitológia (+95%, z 9.6% na 18.7%)</strong>, <strong>Kardiológia (+38%, na 20.9%)</strong> a <strong>Psychológia (+40%)</strong>. Výrazný pokles CTR bol pri <strong>Chirurgii (-46%)</strong> a <strong>Plastickej chirurgii (-45%)</strong>.<br><br>
+          <strong>CPC — mierne rastie pri niektorých kampaniach.</strong> Priemerné CPC zostalo stabilné (€0.22, +1.9%). Obezitológia (+37%) a Urológia (+28%) zaznamenali výraznejší nárast CPC, kvôli zníženému rozpočtu a novým vyhľadávacím výrazom. Naopak, Plast. chirurgia (-16%), USG (-15%) a Neurológia (-12%) zlacneli.<br><br>
+          <strong style="color: var(--green-metric);">Keďže konverzia funguje správne, zaznamenali sme objednávky pre:</strong><br>
+          - RTG — <strong>7</strong> (počet konverzií je naozaj vysoký, treba to skontrolovať)<br>
+          - USG — 3<br>
+          - Gynekológia — 3<br>
+          - Dermatovenerológia — 2
+        </div>
+      </div>
+
+      <div class="comment-card">
+        <div class="comment-header">
+          <div class="comment-avatar" style="background: linear-gradient(135deg, #3A69DB, #000B62);">AK</div>
+          <div>
+            <div class="comment-author">Adrián Kerekes</div>
+            <div class="comment-role">PPC specialist / PM · 18. máj 2026 — referenčný (W20 výsledky)</div>
+          </div>
+        </div>
+        <div class="comment-body">
+          <strong>Plastická chirurgia:</strong> CTR 11.49% → 25.00% (+117%) — great jump in CTR vďaka optimalizácii negatívnych kľúčových slov a search term filtering.<br>
+          <strong>Rádiologické pracovisko (USG):</strong> CTR 12.77% → 24.44% (+91%), CPC €0.62 → €0.30 (-52%).<br>
+          <strong>Chirurgia:</strong> CTR 11.05% → 18.18% (+65%), konverzie 8.5 → 13.4 (+57%).<br>
+          <strong>Dermatovenerológia:</strong> konverzie 10.0 → 19.0 (+90%).<br>
+          <strong>Neurológia:</strong> konverzie 20.9 → 37.9 (+81%) <em>— ALE: jednorazové vstupy v CRM W21 padli z 13 na 2 (-85%), konverzia po kliku má problém.</em><br>
+          <strong>Urológia:</strong> kliky +56%, konverzie 9.97 → 17.98 (+80%).<br>
+          <strong>Angiológia:</strong> CTR kleslo z 28.08% na 17.03% (-39%), po čerstvom spustení treba sledovať <em>— W21 CRM zaznamenal +3 vstupy (4 → 7, +75%), takže dopyt rastie navzdory CTR poklesu.</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ NEXT STEPS ============ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background: linear-gradient(135deg, var(--green), var(--teal)); color: white;">→</div>
+        <div class="section-title">Ďalšie Kroky</div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Akcia</th>
+            <th>Zodpovedný</th>
+            <th>Deadline</th>
+            <th>Priorita</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Validovať RTG attributed 7 objednávok (W21 G Ads)</strong>: Adrián K. sám flagol "počet konverzií je naozaj vysoký, treba to skontrolovať". Treba: (a) match 7 G Ads attributed objednávok s CRM (objednavky.xlsx W21 — produktová filtrácia "RTG"), (b) Events Manager validácia (purchase event vs. iný typ), (c) ak duplicate attribution, opraviť konverzný setup. Ak je 7 reálne, je to silný signál pre RTG ako lead-magnet kampaň.</td>
+            <td>Adrián K. + tracking tím</td>
+            <td>28. máj</td>
+            <td><span style="color: var(--red); font-weight: 600;">Kritická</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vyšetriť Neurológia konverzný gap (CRM W21 -85%)</strong>: Jednorazové vstupy v CRM padli z 13 na 2. G Ads Neurológia má dobré klikové metriky (CPC -12%, CTR stabilné), ale dopyt sa nepremieta do objednávok. Skontrolovať: (a) landing page CTA / load time, (b) dostupnosť termínov v kalendári, (c) čas odozvy recepcie, (d) korelácia s dovolenkou neurológa (Miroslav T. v 21.5. emaile vyznačil dovolenky lekárov v exporte vyťaženosti).</td>
+            <td>Adrián K. + Jozef Z. + recepcia klienta</td>
+            <td>1. jún</td>
+            <td><span style="color: var(--red); font-weight: 600;">Vysoká</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vyriešiť CTR pokles Chirurgia (-46%) a Plast. chirurgia (-45%)</strong>: Po W20 peakoch prišla výrazná korekcia. Adrián K. v 18.5. komentári potvrdil +117% a +65% CTR za W20 vďaka negative KW listu — možno sa zoznam medzitým rozšíril o slová, ktoré teraz škodia. Treba revíziu: prebrať negative KW list, A/B test reklamných textov, skontrolovať konkurenciu (Plast. chir. silná konkurencia, popisaná aj v 20.4. komentári).</td>
+            <td>Adrián K.</td>
+            <td>1. jún</td>
+            <td><span style="color: var(--orange); font-weight: 600;">Vysoká</span></td>
+          </tr>
+          <tr>
+            <td><strong>Potvrdiť Meta Pixel purchase signál v Events Manageri</strong>: W21 priniesol prvé 2 purchase eventy po 40+ dňoch (psychológia, angiológia). Treba overiť (a) reálnosť eventu, (b) match s CRM. Ak signál drží, vrátiť sales kampaniam optimalizáciu na "Website purchase" a postupne škálovať na ďalšie ambulancie.</td>
+            <td>Peter V. + Karol B.</td>
+            <td>1. jún</td>
+            <td><span style="color: var(--orange); font-weight: 600;">Vysoká</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vyriešiť pokles dosahu RPP/Členstvo/Gynekológia/Všeobecné/Jednorázové (Meta)</strong>: Peter V. (25.5.) flagol, že napriek celkovému scale-upu spendu (+173% WoW) niektoré key segmenty strácajú dosah. Identifikovať konkrétne ad sety s poklesom impresií a navrhnúť opatrenie (refresh creative, rozšíriť publiká, audit overlap medzi ad setmi).</td>
+            <td>Peter V.</td>
+            <td>1. jún</td>
+            <td><span style="color: var(--orange); font-weight: 600;">Stredná</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sledovať dopyt Angiológia, Endokrinológia, Kardiológia rastúci trend</strong>: W21 prinieslo silné rasty: Angiológia +75% (CRM 4→7), Endokrinológia +100% (CRM 3→6), Kardiológia CTR +38% na 20.9% (G Ads). Zvážiť cross-sell ponuky (Ročné členstvo, prevent. prehliadka) pre nových pacientov cez email automaticky — capture moment najvyššieho intent-u.</td>
+            <td>Jozef Z. + Crea</td>
+            <td>5. jún</td>
+            <td><span style="color: var(--green-metric); font-weight: 600;">Príležitosť</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vyťaženosť ambulancií — vyžiadať nový sumárny export</strong>: Od 21.5. máme aktualizáciu s dovolenkami lekárov, ale posledný % vyťaženosti je z apríla. Treba refresh, ktorý reflektuje W20+W21 dopyt (Neurológia -85%, ORL stabilne vysoký, Angiológia +75%).</td>
+            <td>Jozef Z. + Miroslav T.</td>
+            <td>1. jún</td>
+            <td><span style="color: var(--gray-500); font-weight: 600;">Nízka</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="report-footer">
+    <div class="footer-brand">
+      <img src="https://www.dexfinity.com/wp-content/uploads/2021/02/Logo-Small-Light-Landscape.svg" alt="Dexfinity" style="height: 22px; width: auto;">
+      <span>· Performance Marketing & Analytics</span>
+    </div>
+    <div>
+      Vygenerované: 25. máj 2026 · Dôverné
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
