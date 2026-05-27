@@ -74,7 +74,7 @@ The skill auto-resolves the closed week, pulls Gmail attachments, fetches MCP da
 | Source | What | Cadence | Owner |
 |---|---|---|---|
 | **Meta Marketing API** (Cowork Meta MCP) | Meta Ads raw metrics | On demand | Dexfinity (MCP token) |
-| **Google Ads UI** (Chrome MCP) | Google Ads raw metrics | On demand | Adrián K. (must be signed in to G Ads in the connected Chrome) |
+| **Google Ads Reporting API** (Supermetrics MCP) | Google Ads raw metrics, account + per-campaign | On demand | Dexfinity (Supermetrics token via `matej.astary@dexfinity.com`) — fallback to Chrome MCP scrape if rate-limited |
 | Basecamp "Weekly reports comments" thread (msg `9791306636`) | Optimization narrative — **NOT raw numbers** | Mondays | Adrián K. (G Ads context), Peter V. (Meta sales context) |
 | CRM orders + products xlsx | Orders, revenue, AOV, product mix | Mondays | Miroslav Tahotný (`miroslav.tahotny@vaslekar.sk`) |
 | Vyťaženosť ambulancií | Per-spec utilization % | Thursdays | Miroslav Tahotný |
