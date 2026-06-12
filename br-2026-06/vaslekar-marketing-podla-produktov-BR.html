@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<title>Marketing podľa produktov · Váš Lekár · Dexfinity</title>
+<meta name="viewport" content="width=1920">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Questrial&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#05024E;--blue:#0065F7;--teal:#16AB8B;--orange:#ff7f00;--red:#ff5470;--dim:#a0a0c0;--blue2:#5aabff;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#0a0726;color:#fff;font-family:'Poppins',Arial,sans-serif;overflow:hidden}
+  .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  .deck{width:1920px;height:1080px;position:relative;transform-origin:center}
+  .slide{position:absolute;inset:0;background:linear-gradient(135deg,#05024E 0%,#0a0762 50%,#05024E 100%);
+    color:#fff;padding:64px 96px;display:none;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
+  .brick{position:absolute;border-radius:50%;background:var(--blue);opacity:.06;pointer-events:none}
+  .b1{width:520px;height:520px;top:-180px;right:-120px}
+  .b2{width:340px;height:340px;bottom:-100px;left:-80px;background:var(--teal);opacity:.05}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;position:relative;z-index:2}
+  .logo{height:50px;width:auto;display:block;opacity:.95}
+  .meta{font-size:14px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase}
+  .meta b{color:var(--blue)}
+  .cover-content{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;z-index:2}
+  .cover-eyebrow{font-size:22px;letter-spacing:8px;color:var(--blue);text-transform:uppercase;font-weight:600;margin-bottom:26px}
+  .cover-title{font-family:'Questrial',Arial,sans-serif;font-size:108px;line-height:1;font-weight:400;letter-spacing:-3px;margin-bottom:26px}
+  .cover-title em{font-style:normal;color:var(--blue)}
+  .cover-sub{font-size:30px;line-height:1.45;color:#cdcde6;font-weight:300;max-width:1500px}
+  .cover-sub b{color:#fff;font-weight:500}
+  .cover-cred{margin-top:46px;font-size:18px;color:var(--dim);letter-spacing:.04em}
+  .eyebrow{font-size:17px;letter-spacing:6px;color:var(--blue);text-transform:uppercase;font-weight:600;margin-bottom:14px;position:relative;z-index:2}
+  h1{font-family:'Questrial',Arial,sans-serif;font-size:72px;line-height:1.04;font-weight:400;letter-spacing:-1.5px;margin-bottom:16px;position:relative;z-index:2}
+  .punchline{font-size:27px;line-height:1.42;color:#fff;font-weight:300;margin-bottom:30px;max-width:1700px;position:relative;z-index:2}
+  .punchline b{color:var(--blue);font-weight:600}
+  .punchline b.t{color:var(--teal)} .punchline b.o{color:var(--orange)} .punchline b.r{color:var(--red)}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:30px;position:relative;z-index:2}
+  .metrics.m3{grid-template-columns:repeat(3,1fr)}
+  .metric{background:rgba(255,255,255,.04);border:1px solid rgba(0,101,247,.35);border-radius:18px;padding:34px 32px}
+  .metric .mnum{font-family:'Questrial';font-size:72px;line-height:.95;color:var(--blue);letter-spacing:-2px;margin-bottom:10px}
+  .metric .mnum.teal{color:var(--teal)} .metric .mnum.orange{color:var(--orange)} .metric .mnum.red{color:var(--red)}
+  .metric .mlabel{font-size:20px;line-height:1.35;color:#d8d8ee;font-weight:300}
+  table{width:100%;border-collapse:collapse;position:relative;z-index:2;margin-bottom:24px}
+  th{font-size:17px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);font-weight:600;text-align:right;padding:14px 18px;border-bottom:2px solid rgba(0,101,247,.5)}
+  th:first-child{text-align:left}
+  td{font-size:24px;font-weight:300;color:#e8e8f6;text-align:right;padding:17px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+  td:first-child{text-align:left;font-weight:500;color:#fff}
+  td b{font-weight:600;color:var(--blue)}
+  tr.hi td{background:rgba(22,171,139,.07)}
+  tr.lo td{background:rgba(255,84,112,.05)}
+  tr.sum td{border-top:2px solid rgba(0,101,247,.5);font-weight:600;color:#fff;font-size:25px}
+  .pill{display:inline-block;padding:3px 14px;border-radius:999px;font-size:18px;font-weight:600}
+  .pill.g{background:rgba(22,171,139,.18);color:#3bd6b4} .pill.r{background:rgba(255,84,112,.16);color:#ff8ba0} .pill.o{background:rgba(255,127,0,.16);color:#ffab57}
+  .note{font-size:16px;color:var(--dim);line-height:1.5;position:relative;z-index:2;max-width:1700px}
+  .note b{color:#cdcde6}
+  .cols2{display:grid;grid-template-columns:1fr 1fr;gap:30px;position:relative;z-index:2;margin-bottom:26px}
+  .panel{background:rgba(255,255,255,.04);border:1px solid rgba(0,101,247,.35);border-radius:18px;padding:30px 34px}
+  .panel.t{border-color:rgba(22,171,139,.45)} .panel.r{border-color:rgba(255,84,112,.4)} .panel.o{border-color:rgba(255,127,0,.45)}
+  .panel h3{font-size:21px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;color:var(--blue2)}
+  .panel.t h3{color:var(--teal)} .panel.r h3{color:#ff8ba0} .panel.o h3{color:var(--orange)}
+  .panel ul{list-style:none}
+  .panel li{font-size:20.5px;line-height:1.45;font-weight:300;color:#e8e8f6;padding:11px 0 11px 32px;position:relative;border-top:1px solid rgba(255,255,255,.07)}
+  .panel li:first-child{border-top:none}
+  .panel li::before{content:'';position:absolute;left:0;top:19px;width:12px;height:12px;border-radius:50%;background:var(--blue)}
+  .panel.t li::before{background:var(--teal)} .panel.r li::before{background:var(--red)} .panel.o li::before{background:var(--orange)}
+  .panel li b{color:#fff;font-weight:600}
+  .chart{position:relative;z-index:2;margin-bottom:10px}
+  .month{margin-bottom:26px}
+  .mhead{display:flex;align-items:baseline;gap:40px;margin-bottom:10px}
+  .mname{font-size:20px;font-weight:300;color:#cdcde6}
+  .mpno{font-family:'Questrial';font-size:27px;font-weight:400}
+  .brow{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .bar{height:30px;border-radius:6px}
+  .bar.spend{background:var(--blue)} .bar.rev{background:var(--teal)}
+  .bval{font-size:21px;font-weight:600;color:#fff;white-space:nowrap}
+  footer{display:flex;justify-content:space-between;align-items:center;color:var(--dim);font-size:14px;letter-spacing:1px;position:relative;z-index:2;margin-top:auto;padding-top:18px}
+  footer .tag{color:var(--blue);letter-spacing:4px;font-weight:600}
+  .nav{position:fixed;right:26px;bottom:20px;display:flex;gap:10px;align-items:center;z-index:50;color:#8888aa;font-size:14px}
+  .nav button{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:8px;
+    width:38px;height:34px;font-size:16px;cursor:pointer}
+  .nav button:hover{background:rgba(0,101,247,.4)}
+  @media print{
+    html,body{overflow:visible;background:#05024E}
+    .stage{position:static;display:block}
+    .deck{width:1920px;height:auto;transform:none!important}
+    .slide{position:relative;display:flex!important;height:1080px;page-break-after:always;inset:auto}
+    .nav{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="stage"><div class="deck" id="deck">
+
+<!-- 1 · COVER -->
+<section class="slide active">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">Váš Lekár · <b>Podklad na BR</b> · jún 2026</div>
+  </header>
+  <div class="cover-content">
+    <div class="cover-eyebrow">Poliklinika Váš Lekár × Dexfinity</div>
+    <div class="cover-title">Marketing podľa <em>produktov</em></div>
+    <div class="cover-sub">Prehľad nákladov na marketing a predajov podľa produktových línií — <b>jednorazové vstupy, rozšírené preventívne prehliadky (RPP) a ročné členstvá (RČ)</b> — za obdobie spolupráce s novou agentúrou: <b>1. apríl – 7. jún 2026</b>.</div>
+    <div class="cover-cred">Zdroje: Google Ads (účet 274-247-6958) · Meta Ads (účet 1783827691983346) · CRM exporty objednávok (Miroslav T.) — extrakcia 12. 6. 2026</div>
+  </div>
+  <footer><span>poliklinika.vaslekar.sk</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+<!-- 2 · CELKOVY OBRAZ -->
+<section class="slide">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">02 · <b>Celkový obraz</b></div>
+  </header>
+  <div class="eyebrow">1. apríl – 7. jún 2026</div>
+  <h1>Čo sme minuli a čo sa predalo</h1>
+  <div class="punchline">Za 68 dní s novou agentúrou: <b>€6 875</b> v médiách (Google Ads + Meta) oproti <b class="t">€74 623</b> tržieb z e-shopu polikliniky (522 objednávok, CRM). Mediálny budget je oproti Q1 (~€1 000/mes.) na <b>2,5–4-násobku</b>.</div>
+  <div class="metrics">
+    <div class="metric"><div class="mnum">€6 875</div><div class="mlabel">Mediálny spend spolu<br>G Ads €2 723 + Meta €4 152</div></div>
+    <div class="metric"><div class="mnum teal">€74 623</div><div class="mlabel">Tržby (netto, CRM)<br>522 objednávok</div></div>
+    <div class="metric"><div class="mnum teal">9,2 %</div><div class="mlabel">Blended PNO za celé obdobie<br>(spend / tržby)</div></div>
+    <div class="metric"><div class="mnum orange">6,3 → 19,9 %</div><div class="mlabel">Mesačné PNO<br>apríl → 1. jún. týždeň</div></div>
+  </div>
+  <div class="note"><b>Fér kontext pre BR:</b> tržby rástli už v marci (€34 179 vs. €16–20k v jan–feb) — apríl (€38 588) teda nie je čisto efekt agentúry. A blended PNO 9,2 % ťahá nahor silný apríl; aktuálny jún beží na ~20 %. Prečo — na ďalších slidoch.</div>
+  <footer><span>Zdroj: Google Ads, Meta Ads API, CRM export 8. 6. 2026</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+<!-- 3 · HLAVNY SLIDE: ROZSTREL -->
+<section class="slide">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">03 · <b>Rozstrel nákladov podľa produktov</b></div>
+  </header>
+  <div class="eyebrow">Hlavná otázka BR</div>
+  <h1>Kam tečie budget vs. čo robí tržby</h1>
+  <div class="punchline"><b>77 %</b> budgetu ide na jednorazové vstupy, ktoré robia <b>34 %</b> tržieb. <b class="t">RČ + RPP robia 56 % tržieb pri 5,6 % budgetu.</b></div>
+  <table>
+    <tr><th>Produktová línia</th><th>Spend</th><th>% budgetu</th><th>Predané ks</th><th>Tržby (CRM)</th><th>% tržieb</th><th>PNO línie</th></tr>
+    <tr class="lo"><td>Jednorazové vstupy</td><td>€5 320</td><td>77,4 %</td><td>343</td><td>€25 387</td><td>34,0 %</td><td><span class="pill r">21,0 %</span></td></tr>
+    <tr class="hi"><td>Ročné členstvá (RČ)</td><td>€173</td><td>2,5 %</td><td>34</td><td>€24 549</td><td>32,9 %</td><td><span class="pill g">0,7 %</span></td></tr>
+    <tr class="hi"><td>Preventívne prehliadky (RPP)</td><td>€216</td><td>3,1 %</td><td>32</td><td>€17 228</td><td>23,1 %</td><td><span class="pill g">1,3 %</span></td></tr>
+    <tr><td>Ročné karty (VL + gyneko)</td><td>€351</td><td>5,1 %</td><td>69</td><td>€7 291</td><td>9,8 %</td><td><span class="pill g">4,8 %</span></td></tr>
+    <tr><td>Boosting + brand podpora</td><td>€816</td><td>11,9 %</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr class="sum"><td>Spolu</td><td>€6 875</td><td>100 %</td><td>522*</td><td>€74 623</td><td>100 %</td><td><b>9,2 %</b></td></tr>
+  </table>
+  <div class="note"><b>Metodika:</b> spend priradený podľa zamerania kampaní/ad setov (G Ads = kampane na špecializácie + brand + PMax → vstupy; Meta dex-RPP / dex-ročné-členstvo / špecializácie). Predaje = všetky CRM objednávky línie, <b>nie pixel atribúcia</b> (pixel zachytí ~5 % nákupov — tracking sa dolaďuje). PNO línie je preto orientačné: RČ/RPP kupujú aj klienti z brandu, organiky a odporúčaní. Smer je však jednoznačný. *Vrátane 44 položiek „ostatné" (€168).</div>
+  <footer><span>Obdobie 1. 4. – 7. 6. 2026 · spend overený v Google Ads UI a Meta API 12. 6.</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+<!-- 4 · MA ZMYSEL NAVYSIT STAVKU -->
+<section class="slide">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">04 · <b>Má zmysel navýšiť stávku?</b></div>
+  </header>
+  <div class="eyebrow">Marginálny výnos spendu</div>
+  <h1>Viac peňazí do vstupov tržby nezdvihlo</h1>
+  <div class="punchline">Od konca mája beží Meta na vstupy na ~4-násobku aprílového tempa. Objednávok pribudlo, ale sú nízko-ticketové — <b class="r">tržby nerástli a PNO sa zhoršuje</b>.</div>
+  <div class="chart">
+    <div class="month">
+      <div class="mhead"><span class="mname">apríl (4,3 týž.)</span><span class="mpno" style="color:#3bd6b4">PNO 6,3 % — pod cieľom 8 %</span></div>
+      <div class="brow"><div class="bar spend" style="width:114px"></div><span class="bval">€570 spend / týž.</span></div>
+      <div class="brow"><div class="bar rev" style="width:900px"></div><span class="bval">€9 004 tržby / týž.</span></div>
+    </div>
+    <div class="month">
+      <div class="mhead"><span class="mname">máj (4,4 týž.)</span><span class="mpno" style="color:#ffab57">PNO 10,7 %</span></div>
+      <div class="brow"><div class="bar spend" style="width:145px"></div><span class="bval">€724</span></div>
+      <div class="brow"><div class="bar rev" style="width:674px"></div><span class="bval">€6 743</span></div>
+    </div>
+    <div class="month">
+      <div class="mhead"><span class="mname">jún (1. týždeň)</span><span class="mpno" style="color:#ff8ba0">PNO 19,9 %</span></div>
+      <div class="brow"><div class="bar spend" style="width:246px"></div><span class="bval">€1 229</span></div>
+      <div class="brow"><div class="bar rev" style="width:618px"></div><span class="bval">€6 175</span></div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:18px"><b>Odpoveď pre BR:</b> áno, stávku má zmysel navýšiť — ale nie tam, kde sme ju navyšovali doteraz. Dodatočné euro do vstupov má klesajúci výnos (CPA vstupu cez médiá ≈ €15,5 pri produkte za €59). Priestor je v líniách, ktoré robia tržby a sú takmer bez budgetu: RČ, RPP a B2B.</div>
+  <footer><span>Spend = G Ads + Meta (celý účet) · tržby = CRM netto · normalizované na týždeň</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+<!-- 5 · RC + RPP DETAIL -->
+<section class="slide">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">05 · <b>RČ a RPP</b></div>
+  </header>
+  <div class="eyebrow">Prečo treba fixný rozstrel</div>
+  <h1>Keď premium vypneme, prestane sa predávať</h1>
+  <div class="punchline">Spend na RČ + RPP v máji klesol na <b class="r">€70 za celý mesiac</b> — a predaje členstiev spadli z 22 na 10 ks. Bez fixnej alokácie sa budget vždy „preleje" do vstupov.</div>
+  <table>
+    <tr><th>Mesiac</th><th>RČ spend</th><th>RČ predané</th><th>RČ tržby</th><th>RPP spend</th><th>RPP predané</th><th>RPP tržby</th></tr>
+    <tr><td>Apríl</td><td>€80</td><td><b>22 ks</b></td><td>€15 556</td><td>€91</td><td><b>19 ks</b></td><td>€10 511</td></tr>
+    <tr class="lo"><td>Máj</td><td>€24</td><td>10 ks</td><td>€7 795</td><td>€46</td><td>11 ks</td><td>€5 459</td></tr>
+    <tr class="lo"><td>Jún (1. týž.)</td><td>€68</td><td>2 ks</td><td>€1 198</td><td>€79</td><td>2 ks</td><td>€1 258</td></tr>
+  </table>
+  <div class="cols2">
+    <div class="panel t">
+      <h3>Čo z toho vieme</h3>
+      <ul>
+        <li>RČ + RPP = <b>€41 777 tržieb (56 %)</b> pri minimálnom spende — najefektívnejšie eurá v účte.</li>
+        <li>Priemerný ticket: RČ <b>€722</b>, RPP <b>€538</b> vs. vstup €74 — jeden člen = ~10 vstupov.</li>
+      </ul>
+    </div>
+    <div class="panel o">
+      <h3>Čo si priznajme</h3>
+      <ul>
+        <li>Korelácia ≠ kauzalita — pri pixel pokrytí ~5 % nevieme dokázať, koľko RČ priniesli kampane. <b>Tracking fix je podmienka.</b></li>
+        <li>Aprílový mix mohol ťahať aj iný faktor (sezóna prehliadok, odporúčania lekárov) — preto navrhujeme test, nie preklopenie budgetu.</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span>Zdroj: Meta ad-set spend (dex-rocne-clenstvo, dex-RPP) · CRM predaje podľa produktov</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+<!-- 6 · NAVRH ROZSTRELU -->
+<section class="slide">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">06 · <b>Návrh na rozhodnutie</b></div>
+  </header>
+  <div class="eyebrow">Návrh Dexfinity na BR</div>
+  <h1>Fixný rozstrel budgetu od 15. júna</h1>
+  <div class="punchline">Pri aktuálnom tempe ~<b>€5 300/mes.</b> navrhujeme záväzný split s mesačným vyhodnotením per línia:</div>
+  <table>
+    <tr><th>Línia</th><th>Dnes (apr–jún)</th><th>Návrh</th><th>≈ €/mes.</th><th>Cieľ / metrika úspechu</th></tr>
+    <tr><td>Jednorazové vstupy</td><td>77 %</td><td><b>50 %</b></td><td>€2 650</td><td style="font-size:20px">Držať objem objednávok, CPA &lt; €12</td></tr>
+    <tr class="hi"><td>Ročné členstvá (RČ)</td><td>2,5 %</td><td><b>20 %</b></td><td>€1 060</td><td style="font-size:20px">≥ 15 RČ/mes. (apríl dokázal 22 pri €80)</td></tr>
+    <tr class="hi"><td>Preventívne prehliadky (RPP)</td><td>3,1 %</td><td><b>17,5 %</b></td><td>€930</td><td style="font-size:20px">≥ 15 RPP/mes., vstupný high-ticket produkt</td></tr>
+    <tr><td>Ročné karty + B2B</td><td>5,1 %</td><td><b>5 %</b></td><td>€265</td><td style="font-size:20px">B2B balíčky cez HR firiem — bez médií, outreach</td></tr>
+    <tr><td>Boosting / brand</td><td>11,9 %</td><td><b>7,5 %</b></td><td>€400</td><td style="font-size:20px">Refresh kreatív (ad fatigue signály z W23)</td></tr>
+  </table>
+  <div class="cols2" style="margin-top:6px">
+    <div class="panel">
+      <h3>Podmienky, aby to fungovalo</h3>
+      <ul>
+        <li><b>Dokončiť GA4 + Meta pixel/CAPI</b> — bez toho nevieme rozstrel vyhodnotiť (dnes vidíme ~5 % nákupov).</li>
+        <li><b>Aktuálny export vyťaženosti ambulancií</b> — posledný je k 20. 4.; členstvá predávajú „rýchle termíny".</li>
+      </ul>
+    </div>
+    <div class="panel t">
+      <h3>Vyhodnotenie</h3>
+      <ul>
+        <li>Mesačný report per línia: spend, ks, tržby, PNO — rovnaká tabuľka ako slide 3, vždy na BR.</li>
+        <li>Revízia splitu po 2 mesiacoch (15. 8.) podľa dát, nie pocitu.</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span>Váš Lekár × Dexfinity · podklad pripravil CreAI tím · 12. 6. 2026</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+</div></div>
+<div class="nav"><button id="prev">‹</button><span><span id="cur">1</span>/<span id="tot">6</span></span><button id="next">›</button></div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var total=slides.length;
+  document.getElementById('tot').textContent=total;
+  var cur=document.getElementById('cur');
+  function go(idx){idx=Math.max(0,Math.min(total-1,idx));
+    slides.forEach(function(s,i){s.classList.toggle('active',i===idx);});
+    cur.textContent=idx+1; if(history.replaceState){history.replaceState(null,'','#'+idx);}}
+  function current(){var i=slides.findIndex(function(s){return s.classList.contains('active');});return i<0?0:i;}
+  document.getElementById('prev').onclick=function(){go(current()-1);};
+  document.getElementById('next').onclick=function(){go(current()+1);};
+  document.addEventListener('keydown',function(e){
+    switch(e.key){
+      case 'ArrowRight':case ' ':case 'PageDown':case 'n':go(current()+1);e.preventDefault();break;
+      case 'ArrowLeft':case 'PageUp':case 'p':go(current()-1);e.preventDefault();break;
+      case 'Home':go(0);e.preventDefault();break;
+      case 'End':go(total-1);e.preventDefault();break;
+      case 'f':case 'F':if(!document.fullscreenElement){document.documentElement.requestFullscreen();}else{document.exitFullscreen();}e.preventDefault();break;
+    }
+  });
+  function fit(){var d=document.getElementById('deck');var s=Math.min(window.innerWidth/1920,window.innerHeight/1080);d.style.transform='scale('+s+')';}
+  window.addEventListener('resize',fit);fit();
+  go(parseInt((location.hash||'').replace('#',''))||0);
+})();
+</script>
+</body>
+</html>
