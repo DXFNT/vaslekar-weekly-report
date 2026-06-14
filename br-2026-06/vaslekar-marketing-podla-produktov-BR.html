@@ -85,11 +85,27 @@
   .slide.compact .panel li{font-size:18.5px;padding:8px 0 8px 28px;line-height:1.4}
   .slide.compact .panel li::before{top:15px;width:10px;height:10px}
   .slide.compact .note{font-size:15px}
+  .slide.amb{padding:34px 96px 30px}
+  .slide.amb h1{font-size:48px;margin-bottom:6px}
+  .slide.amb .eyebrow{margin-bottom:6px}
+  .slide.amb .punchline{font-size:20px;margin-bottom:12px}
+  .slide.amb table{margin-bottom:12px}
+  .slide.amb td{padding:6px 16px;font-size:19px}
+  .slide.amb th{padding:6px 16px;font-size:14px}
+  .slide.amb tr.sum td{font-size:20px}
+  .slide.amb .pill{font-size:15px;padding:2px 11px}
+  .slide.amb .cols2{gap:24px;margin-bottom:0}
+  .slide.amb .panel{padding:14px 22px}
+  .slide.amb .panel h3{font-size:17px;margin-bottom:6px;letter-spacing:1.5px}
+  .slide.amb .panel li{font-size:15.5px;padding:6px 0 6px 24px;line-height:1.34}
+  .slide.amb .panel li::before{top:13px;width:9px;height:9px}
+  .slide.amb footer{padding-top:12px}
   .nav{position:fixed;right:26px;bottom:20px;display:flex;gap:10px;align-items:center;z-index:50;color:#8888aa;font-size:14px}
   .nav button{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:8px;
     width:38px;height:34px;font-size:16px;cursor:pointer}
   .nav button:hover{background:rgba(0,101,247,.4)}
   @media print{
+    @page{size:1920px 1080px;margin:0}
     html,body{overflow:visible;background:#05024E}
     .stage{position:static;display:block}
     .deck{width:1920px;height:auto;transform:none!important}
@@ -159,12 +175,56 @@
   <footer><span>Obdobie 1. 4. – 7. 6. 2026 · spend overený v Google Ads UI a Meta API 12. 6.</span><span class="tag">GO BEYOND</span></footer>
 </section>
 
-<!-- 4 · MA ZMYSEL NAVYSIT STAVKU -->
+<!-- 4 · VSTUPY PODLA AMBULANCII -->
+<section class="slide compact amb">
+  <div class="brick b1"></div><div class="brick b2"></div>
+  <header>
+    <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
+    <div class="meta">04 · <b>Vstupy podľa ambulancií</b></div>
+  </header>
+  <div class="eyebrow">Detail na žiadosť klienta</div>
+  <h1>Jednorazové vstupy rozpísané po ambulanciách</h1>
+  <div class="punchline">343 vstupov (€25 387) podľa špecializácie — s <b>priamym mediálnym nákladom</b> (cielené Google SRCH + Meta kampane na danú ambulanciu) a <b class="t">priamym PNO</b>. Konverzia = reálne objednávky z CRM, nie pixel.</div>
+  <table>
+    <tr><th>Ambulancia</th><th>Objednávky</th><th>Vstupy (ks)</th><th>Tržby (CRM)</th><th>Priamy spend<br>(G SRCH + Meta)</th><th>Priame PNO</th></tr>
+    <tr><td>Urológia</td><td>63</td><td>65</td><td>€3 817</td><td>€357</td><td><span class="pill o">9,4 %</span></td></tr>
+    <tr class="hi"><td>Endokrinológia</td><td>35</td><td>70</td><td>€3 815</td><td>€192</td><td><span class="pill g">5,0 %</span></td></tr>
+    <tr><td>Neurológia</td><td>59</td><td>64</td><td>€3 731</td><td>€418</td><td><span class="pill o">11,2 %</span></td></tr>
+    <tr><td>ORL</td><td>56</td><td>59</td><td>€3 454</td><td>€415</td><td><span class="pill o">12,0 %</span></td></tr>
+    <tr class="hi"><td>Imunoalergológia</td><td>29</td><td>61</td><td>€3 311</td><td>€75</td><td><span class="pill g">2,3 %</span></td></tr>
+    <tr class="hi"><td>Diabetológia</td><td>26</td><td>34</td><td>€1 934</td><td>€11</td><td><span class="pill g">0,6 %</span></td></tr>
+    <tr><td>Kardiológia</td><td>16</td><td>32</td><td>€1 744</td><td>€243</td><td><span class="pill o">13,9 %</span></td></tr>
+    <tr class="lo"><td>Angiológia</td><td>29</td><td>29</td><td>€1 711</td><td>€416</td><td><span class="pill r">24,3 %</span></td></tr>
+    <tr><td>Gastroenterológia</td><td>16</td><td>18</td><td>€1 044</td><td>€174</td><td><span class="pill r">16,6 %</span></td></tr>
+    <tr><td>Ortopédia</td><td>10</td><td>10</td><td>€590</td><td>€128</td><td><span class="pill r">21,7 %</span></td></tr>
+    <tr class="lo"><td>Vnútorné lekárstvo</td><td>4</td><td>4</td><td>€236</td><td>€254</td><td><span class="pill r">108 %</span></td></tr>
+    <tr class="sum"><td>Spolu — jednorazové vstupy</td><td>343</td><td>446</td><td>€25 387</td><td>€2 682</td><td><b>10,6 %</b></td></tr>
+  </table>
+  <div class="cols2" style="margin-top:4px">
+    <div class="panel t">
+      <h3>Kde sú vstupy najlacnejšie</h3>
+      <ul>
+        <li><b>Diabetológia, Imunoalergológia, Endokrinológia</b> — silný dopyt pri priamom PNO 0,6–5,0 %. Dáta ťahá brand/organika, mediálny priestor je tu najväčší.</li>
+        <li><b>Vnútorné lekárstvo</b>: €254 médií → €236 tržieb (PNO 108 %) a <b>Angiológia</b> 24 % — kandidáti na škrt alebo zmenu cielenia.</li>
+      </ul>
+    </div>
+    <div class="panel o">
+      <h3>Metodika a spoločný budget</h3>
+      <ul>
+        <li>Priamy spend = len kampane cielené na ambulanciu. <b>Spoločný budget €2 638</b> (PMax, brand, awareness) podporuje všetky ambulancie — nedá sa priradiť jednej.</li>
+        <li>Pozor: <b>Oftalmológia dostala ~€560 médií (G+Meta), ale 0 vstupov v CRM</b> — ambulancia bez online produktu. Podobne USG, RTG, fyzio.</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span>Zdroj: Google Ads kampane (SRCH per špecializácia) + Meta ad-set spend · CRM objednávky · 1. 4. – 7. 6. 2026</span><span class="tag">GO BEYOND</span></footer>
+</section>
+
+<!-- 5 · MA ZMYSEL NAVYSIT STAVKU -->
 <section class="slide">
   <div class="brick b1"></div><div class="brick b2"></div>
   <header>
     <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
-    <div class="meta">04 · <b>Má zmysel navýšiť stávku?</b></div>
+    <div class="meta">05 · <b>Má zmysel navýšiť stávku?</b></div>
   </header>
   <div class="eyebrow">Marginálny výnos spendu</div>
   <h1>Jednorazové vstupy splnili cieľ — a narazili na strop</h1>
@@ -190,12 +250,12 @@
   <footer><span>Spend = G Ads + Meta sales (bez boostingu) · tržby = CRM netto · normalizované na týždeň</span><span class="tag">GO BEYOND</span></footer>
 </section>
 
-<!-- 5 · RC + RPP DETAIL -->
+<!-- 6 · RC + RPP DETAIL -->
 <section class="slide">
   <div class="brick b1"></div><div class="brick b2"></div>
   <header>
     <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
-    <div class="meta">05 · <b>RČ a RPP</b></div>
+    <div class="meta">06 · <b>RČ a RPP</b></div>
   </header>
   <div class="eyebrow">Prečo veríme fáze 2</div>
   <h1>RČ a RPP sa predávali prakticky bez médií</h1>
@@ -225,12 +285,12 @@
   <footer><span>Zdroj: Meta ad-set spend (dex-rocne-clenstvo, dex-RPP) · CRM predaje podľa produktov</span><span class="tag">GO BEYOND</span></footer>
 </section>
 
-<!-- 6 · NAVRH ROZSTRELU -->
+<!-- 7 · NAVRH ROZSTRELU -->
 <section class="slide compact">
   <div class="brick b1"></div><div class="brick b2"></div>
   <header>
     <img class="logo" src="https://www.dexfinity.com/wp-content/uploads/2021/03/Logo-Small-Dark-Landscape@2x.png" alt="Dexfinity">
-    <div class="meta">06 · <b>Návrh na rozhodnutie</b></div>
+    <div class="meta">07 · <b>Návrh na rozhodnutie</b></div>
   </header>
   <div class="eyebrow">Návrh Dexfinity na BR</div>
   <h1>Fáza 2: prerozdelenie budgetu od 15. júna</h1>
